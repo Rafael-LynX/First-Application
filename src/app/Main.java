@@ -12,13 +12,29 @@ import java.util.Scanner;
 import src.model.Conta;
 import src.service.BancoService;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.SimpleFormatter;
+
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Logger logger = Logger.getLogger("AppLog");
-        
-        logger.info("Aplicação de Banco Iniciada!");
 
+        // Configurando o Logger para exibir apenas mensagens
+        logger.setUseParentHandlers(false); // Remove o formato padrão
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new SimpleFormatter() {
+            @Override
+            public synchronized String format(java.util.logging.LogRecord myRecord) {
+                return myRecord.getMessage() + "\n"; // Apenas a mensagem
+            }
+        });
+        logger.addHandler(handler);
+
+        // Iniciando a aplicação
+        logger.info("Aplicação de Banco Iniciada!");
+        
         // Coleta de dados do cliente segura
         logger.info("Digite seu nome: ");
         String nome = scanner.nextLine().trim();
@@ -34,8 +50,11 @@ public class Main {
         // Criando clientes com segurança
         Cliente cliente = new Cliente(nome, senhaStr.toCharArray());
 
+        // Criando conta
+        Conta conta = new Conta("12345"); // Inicializando com saldo 0.0
+
         // Inicializando bancoservice
-        BancoService bancoService = new BancoService(cliente);
+        BancoService bancoService = new BancoService(cliente, conta);
 
         logger.info("Cliente criado com sucesso! Nome: ");
         logger.info("Nome: " + cliente.getNome());
@@ -65,7 +84,7 @@ public class Main {
                 case 3:
                     logger.info("Digite o valor para Transferência: ");
                     double transferencia = scanner.nextDouble();
-                    bancoService.transferir(transferencia);
+                    bancoService.transferir(conta, transferencia);
                     break;
                 case 4:
                     logger.info("Saindo...");

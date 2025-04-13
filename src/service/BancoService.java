@@ -7,6 +7,7 @@ import src.model.Conta;
 public class BancoService {
     private Cliente cliente;
     private Conta conta;   
+    
 
     public BancoService(Cliente cliente, Conta conta) {
         this.cliente = cliente;
@@ -31,13 +32,13 @@ public class BancoService {
         logger.info("Depósito de " + valor + " realizado com sucesso!");
     }
 
-    public void transferir( double valor) {
+    public void transferir(Conta destino, double valor) {
         if (valor <= 0) {
             Logger logger = Logger.getLogger("BancoServiceLog");
             logger.warning("Valor de transferência inválido: " + valor);
             return;
         }
-        boolean sucesso = conta.transferirPara(valor);
+        boolean sucesso = conta.transferirPara(destino, valor);
         if (sucesso) {
             Logger logger = Logger.getLogger("BancoServiceLog");
             logger.info("Transferência de " + valor + " realizada com sucesso!");

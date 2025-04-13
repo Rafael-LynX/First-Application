@@ -19,9 +19,10 @@ public class Conta {
         } 
     }
 
-    public boolean transferirPara(double valor) {
+    public boolean transferirPara(Conta destino, double valor) {
         if (valor > 0 && saldo >= valor) {
             saldo -= valor;
+            destino.depositar(valor);
             return true;
         } 
         return false;
