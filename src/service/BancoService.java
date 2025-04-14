@@ -1,10 +1,12 @@
 package src.service;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import src.model.Cliente;
 import src.model.Conta;
 
 public class BancoService {
+    private static final Logger logger = Logger.getLogger(BancoService.class.getName());
     private Cliente cliente;
     private Conta conta;   
     
@@ -14,8 +16,7 @@ public class BancoService {
         this.conta = conta;
     }
 
-    public void exibirSaldo() {
-        Logger logger = Logger.getLogger("BancoServiceLog");
+    public void exibirSaldo() {  
         logger.info("Cliente: " + cliente.getNome());
         logger.info("Tipo de Conta: Corrente");
         logger.info("Saldo atual: " + conta.getSaldo());
@@ -23,28 +24,23 @@ public class BancoService {
 
     public void depositar(double valor) {
         if (valor <= 0) {
-            Logger logger = Logger.getLogger("BancoServiceLog");
-            logger.warning("Valor de depósito inválido: " + valor);
+            logger.log(Level.WARNING, () -> String.format("Valor de depósito inválido: %.2f", valor));
             return;
         }
         conta.depositar(valor);
-        Logger logger = Logger.getLogger("BancoServiceLog");
-        logger.info("Depósito de " + valor + " realizado com sucesso!");
+        logger.log(Level.INFO, () -> String.format("Depósito de %.2f realizado com sucesso!", valor));
     }
 
     public void transferir(Conta destino, double valor) {
         if (valor <= 0) {
-            Logger logger = Logger.getLogger("BancoServiceLog");
-            logger.warning("Valor de transferência inválido: " + valor);
+            logger.log(Level.WARNING, () -> String.format("Valor de transferência inválido: %.2f", valor));
             return;
         }
         boolean sucesso = conta.transferirPara(destino, valor);
         if (sucesso) {
-            Logger logger = Logger.getLogger("BancoServiceLog");
-            logger.info("Transferência de " + valor + " realizada com sucesso!");
+            logger.log(Level.INFO, () -> String.format("Transferência de %.2f realizada com sucesso!", valor));
         } else {
-            Logger logger = Logger.getLogger("BancoServiceLog");
-            logger.warning("Transferência falhou. Verifique o saldo.");
+            logger.log(Level.WARNING, () -> String.format("Transferência de %.2f falhou. Verifique o saldo.", valor));
         }
     }
 
