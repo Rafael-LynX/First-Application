@@ -46,7 +46,6 @@ public class Main {
             if (senhaStr.length() >= 4) break;
             logger.warning("Senha deve ter pelo menos 4 caracteres.");  
         }
-
         // Criando clientes com segurança
         Cliente cliente = new Cliente(nome, senhaStr.toCharArray());
 
@@ -86,13 +85,13 @@ public class Main {
                     double transferencia = scanner.nextDouble();
                     bancoService.transferir(conta, transferencia);
                     break;
-                case 4:
+                case 4: 
                     logger.info("Saindo...");
                     cliente.limparSenha();
                     scanner.close();
                     return;
                 default:
-                    logger.warning("Opção inválida. Tente novamente.");
+                    logger.warning(() -> String.format("Opção inválida: %d", opcao));
                     break;
             }
         }
